@@ -27,6 +27,7 @@ pnpm dlx skills add assb-lab/igorpro-dev-skills --skill igorpro-8-development
 **対応内容**
 
 - Igor Pro 9 以降の構文・API を避け、8.04 互換の `.ipf` を作成・修正
+- 新規 `.ipf` では原則 `#pragma rtFunctionErrors = 1` を有効化して組み込み関数の実行時エラーを検出しやすくする（既存コードでは挙動変更に注意）
 - ローカルでは `command -v ipt` などで IPT の利用可否を確認
 - macOS で未インストールなら公式配布元を確認し、`~/.local/bin/ipt` から利用できるようにする
 - 変更したファイルに `ipt check` と `ipt lint` を実施し、必要時のみ `ipt format -i` を実施
