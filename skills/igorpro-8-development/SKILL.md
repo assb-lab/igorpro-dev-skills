@@ -46,6 +46,25 @@ ipt --help
 - 特に Igor Pro 9 / 10 の新機能を混ぜ込まない。
 - IPT の診断だけを理由に、Igor Pro 8 で正常動作するコードを壊さない。
 
+### 実行時エラー検出用 pragma（新規ファイルでは原則必須）
+
+Igor Pro 8.04 で新しく作成する `.ipf` には、特別な理由がない限り次の pragma をファイル冒頭に追加する。
+
+~~~igorpro
+#pragma rtGlobals = 3
+#pragma rtFunctionErrors = 1
+~~~
+
+- `#pragma rtFunctionErrors = 1` は **Igor Pro 7.00 から対応**しており、Igor Pro **8.04 で使用できる**。
+- ユーザー定義関数内から呼び出した**組み込み関数のエラー**を報告させるデバッグ支援機能。通常は `NaN`、`0`、空文字列などが返るだけで見逃されるエラーを検出しやすくする。ただし、すべてのエラーを検出するわけではない。
+- `#pragma rtGlobals = 3` は厳格な Wave 参照とインデックス境界検査を有効にする推奨設定で、`rtFunctionErrors` とは別の機能。新規コードでは両方を推奨する。
+- `#pragma` は**行頭（インデントなし）**に記述する。効果はその **Procedure ファイル内**に限られる。ほかの `.ipf` にも適用するには、それぞれに記述する。
+- **既存ファイルへ無条件に追記しない**。組み込み関数の `NaN` や戻り値による判定を意図的に使っている場合、エラー報告を有効化すると実行時の振る舞いが変わり得る。処理への影響を確認してから追加・変更する。
+- この pragma は**実行時のエラー検出**のためのものであり、`ipt check`・`ipt lint` や Igor Pro 本体でのコンパイルの代替ではない。
+- 実際の挙動を確認したときは、**Igor Pro 8.04 本体で実行確認したか**明示する。未実行であれば保証しない。
+
+公式資料：[WaveMetrics: The rtFunctionErrors Pragma](https://docs.wavemetrics.com/igorpro/programming/programming#the-rtfunctionerrors-pragma) / [Igor Pro 8 マニュアル](https://www.wavemetrics.net/doc/IgorMan8.pdf)
+
 ## 4. 変更後の検証
 
 変更した **すべての `.ipf`** に対して以下を実行する。
